@@ -4,17 +4,20 @@
   "steps": [
     {
       "directory": "dynamodb",
-      "description": "Click the following command to initialize Terraform, then click **Next**:\n\n>> cd dynamodb && terraform init\n\nLeave the terminal window open for the remainder of the lab. "
+      "description": "Click the following command to initialize Terraform, then click **Next**:\n\n>> cd dynamodb && terraform init\n\nLeave the terminal window open for the remainder of the lab. ",
+      "title": "Init"
     },
     {
       "file": "dynamodb/main.tf",
       "description": "The **aws_dynamodb_table** **table** resource is configured with read an write capacity, as well as a defined **hash_key** attribute.\n\nTo add a DynamoDB item to this table, the item must access this table's **name** and **hash_key** attribute. ",
-      "line": 16
+      "line": 16,
+      "title": "DynamoDB Table"
     },
     {
       "file": "dynamodb/main.tf",
       "description": "The **aws_dynamodb_table_item** **item** resource references the **table_name** and **hash_key** attributes of the DynamoDB table above.\n\nThe configuration also provides an **item** object with attributes, which will be added to the table.",
-      "line": 29
+      "line": 29,
+      "title": "DynamoDB Table Item"
     },
     {
       "directory": "dynamodb",
@@ -28,37 +31,45 @@
           "line": 1,
           "character": 37
         }
-      }
+      },
+      "title": "Terraform Graph"
     },
     {
       "directory": "dynamodb",
-      "description": "In the [Edotor](https://edotor.net/) web page, paste the command output into the left-hand field to render your graph. \n\nThe **aws_dynamodb_table.table** and **aws_dynamodb_table_item.item** resources are displayed on the same level in the diagram. \n\nWithout an implicit dependency declared, Terraform is not aware that the **table** resource must be created before the **item** resource. "
+      "description": "In the [Edotor](https://edotor.net/) web page, paste the command output into the left-hand field to render your graph. \n\nThe **aws_dynamodb_table.table** and **aws_dynamodb_table_item.item** resources are displayed on the same level in the diagram. \n\nWithout an implicit dependency declared, Terraform is not aware that the **table** resource must be created before the **item** resource. ",
+      "title": "Edotor"
     },
     {
       "directory": "dynamodb",
-      "description": "Enter the following command into the terminal to apply the configuration and observe the output:\n\n```\nterraform apply --auto-approve\n```\n\nAs expected, the Terraform apply command returns a **ResourceNotFoundException: Requested resource not found** error. \n\nThis race condition can be remedied with the use of an implicit dependency."
+      "description": "Enter the following command into the terminal to apply the configuration and observe the output:\n\n```\nterraform apply --auto-approve\n```\n\nAs expected, the Terraform apply command returns a **ResourceNotFoundException: Requested resource not found** error for the **item** resource.\n\nThe **table** resource will be created successfully, but since the table did not exist at the time of the initial **item** creation, the item will not be created.\n\nThis race condition can be remedied with the use of an implicit dependency.",
+      "title": "Failed Item Deployment"
     },
     {
       "file": "dynamodb/main.tf",
       "description": "Replace the value of **table_name** with *aws_dynamodb_table.table.name*\n\nYou do not need to encapsulate the dependency value with quotation marks.",
-      "line": 30
+      "line": 30,
+      "title": "table_name Dependency"
     },
     {
       "file": "dynamodb/main.tf",
       "description": "Replace the value of **hash_key** with *aws_dynamodb_table.table.hash_key*",
-      "line": 31
+      "line": 31,
+      "title": "hash_key Dependency"
     },
     {
       "directory": "dynamodb",
-      "description": "Click the command below to render an updated diagram of your configuration:\n\n>> terraform graph\n\nRender the updated graph in the Edotor web tool.\n\nYou will notice the **item** resource is now below the **table** resource. \n\nThe implicit dependency instructs Terraform to create the table first, followed by the table item."
+      "description": "Click the command below to render an updated diagram of your configuration:\n\n>> terraform graph\n\nRender the updated graph in the Edotor web tool.\n\nYou will notice the **item** resource is now below the **table** resource. \n\nThe implicit dependency instructs Terraform to create the table first, followed by the table item.",
+      "title": "Updated Graph"
     },
     {
       "directory": "dynamodb",
-      "description": "Click the command below to attempt a second deployment:\n\n>> terraform apply --auto-approve\n\nThis time, the deployment is successful and the DynamoDB table and item are created in the correct order."
+      "description": "Click the command below to attempt a second deployment:\n\n>> terraform apply --auto-approve\n\nThis time, the deployment is successful and the remaining DynamoDB item is created. \n\nWith this dependency, the initial deployment with both resources will also succeed.",
+      "title": "Successful Deployment"
     },
     {
       "directory": "dynamodb",
-      "description": "You have successfully deployed an Amazon DynamoDB table and item to AWS using Terraform. \n\nReturn to the Cloud Academy Lab browser tab and run the validation check associated with this lab step."
+      "description": "You have successfully deployed an Amazon DynamoDB table and item to AWS using Terraform. \n\nReturn to the Cloud Academy Lab browser tab and run the validation check associated with this lab step.",
+      "title": "Complete"
     }
   ]
 }
