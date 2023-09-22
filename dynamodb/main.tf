@@ -11,7 +11,22 @@ provider "aws" {
   region = "us-west-2"
 }
 
-resource "aws_dynamodb_table_item" "example" {
+# DynamoDB Table
+
+resource "aws_dynamodb_table" "table" {
+  name           = "example-name"
+  read_capacity  = 10
+  write_capacity = 10
+  hash_key       = "exampleHashKey"
+  attribute {
+    name = "exampleHashKey"
+    type = "S"
+  }
+}
+
+# DynamoDB Table Item
+
+resource "aws_dynamodb_table_item" "item" {
   table_name = "example-name"
   hash_key   = "exampleHashKey"
   item = <<ITEM
@@ -23,15 +38,4 @@ resource "aws_dynamodb_table_item" "example" {
   "four": {"N": "44444"}
 }
 ITEM
-}
-
-resource "aws_dynamodb_table" "example" {
-  name           = "example-name"
-  read_capacity  = 10
-  write_capacity = 10
-  hash_key       = "exampleHashKey"
-  attribute {
-    name = "exampleHashKey"
-    type = "S"
-  }
 }
